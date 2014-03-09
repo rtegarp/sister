@@ -7,19 +7,13 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using SerializableData;
 
 namespace SGSclient
 {
-    
-    enum Command
-    {
-        Login,     
-        Logout,    
-        Message,    
-        List,       
-        Null        
-    }
-
     public partial class SGSClient : Form
     {
         public Socket clientSocket; 
@@ -49,12 +43,15 @@ namespace SGSclient
               
                 msgToSend.strName = strName;
                 msgToSend.strMessage = pilihComboBox.Text;
-                msgToSend.cmdCommand = Command.Message;
+                msgToSend.cmdCommand = SerializableData.Data.Command.Message;
                 coba.Add(msgToSend);
                 coba.Add(msgToSend);
 
+                MemoryStream fs = new MemoryStream();
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fs, msgToSend);
                 
-               byte[] byteData = msgToSend.ToByte();
+                byte[] byteData = fs.ToArray();
 
                 clientSocket.BeginSendTo (byteData, 0, byteData.Length, SocketFlags.None, epServer, new AsyncCallback(OnSend), null);
 
@@ -86,26 +83,28 @@ namespace SGSclient
             {                
                 clientSocket.EndReceive(ar);
 
-                Data msgReceived = new Data(byteData);
+                MemoryStream ms = new MemoryStream(byteData);
+                BinaryFormatter formatter = new BinaryFormatter();
+                Data msgReceived = (Data)formatter.Deserialize(ms);
 
                 switch (msgReceived.cmdCommand)
                 {
-                    case Command.Login:
+                    case SerializableData.Data.Command.Login:
                         //lstChatters.Items.Add(msgReceived.strName);
                         break;
 
-                    case Command.Logout:
+                    case SerializableData.Data.Command.Logout:
                         break;
 
-                    case Command.Message:
+                    case SerializableData.Data.Command.Message:
                         break;
 
-                    case Command.List:
+                    case SerializableData.Data.Command.List:
                         txtChatBox.Text += "<<<" + strName + " Telah masuk ke dalam aplikasi cuaca>>>\r\n";
                         break;
                 }
 
-                if (msgReceived.strMessage != null && msgReceived.cmdCommand != Command.List)
+                if (msgReceived.strMessage != null && msgReceived.cmdCommand != SerializableData.Data.Command.List)
                 {
                     txtChatBox.Text = "";
                     txtChatBox.Text += msgReceived.strMessage + "\r\n";
@@ -130,11 +129,15 @@ namespace SGSclient
             this.Text = "SGSclient: " + strName;
             
             Data msgToSend = new Data ();
-            msgToSend.cmdCommand = Command.List;
+            msgToSend.cmdCommand = SerializableData.Data.Command.List;
             msgToSend.strName = strName;
             msgToSend.strMessage = null;
 
-            byteData = msgToSend.ToByte();
+            MemoryStream fs = new MemoryStream();
+            BinaryFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(fs, msgToSend);
+
+            byteData = fs.ToArray();
 
             clientSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, epServer, 
                 new AsyncCallback(OnSend), null);
@@ -169,11 +172,15 @@ namespace SGSclient
             {
                 //Send a message to logout of the server
                 Data msgToSend = new Data ();
-                msgToSend.cmdCommand = Command.Logout;
+                msgToSend.cmdCommand = SerializableData.Data.Command.Logout;
                 msgToSend.strName = strName;
                 msgToSend.strMessage = null;
 
-                byte[] b = msgToSend.ToByte ();
+                MemoryStream fs = new MemoryStream();
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fs, msgToSend);
+
+                byte[] b = fs.ToArray();
                 clientSocket.SendTo(b, 0, b.Length, SocketFlags.None, epServer);
                 clientSocket.Close();
             }
@@ -192,63 +199,5 @@ namespace SGSclient
                 btnSend_Click(sender, null);
             }
         }
-    }
-    
-    class Data
-    {
-        public Data()
-        {
-            this.cmdCommand = Command.Null;
-            this.strMessage = null;
-            this.strName = null;
-        }
-
-        public Data(byte[] data)
-        {
-            this.cmdCommand = (Command)BitConverter.ToInt32(data, 0);
-
-            int nameLen = BitConverter.ToInt32(data, 4);
-
-            int msgLen = BitConverter.ToInt32(data, 8);
-
-            if (nameLen > 0)
-                this.strName = Encoding.UTF8.GetString(data, 12, nameLen);
-            else
-                this.strName = null;
-
-            if (msgLen > 0)
-                this.strMessage = Encoding.UTF8.GetString(data, 12 + nameLen, msgLen);
-            else
-                this.strMessage = null;
-        }
-
-        public byte[] ToByte()
-        {
-            List<byte> result = new List<byte>();
-
-            result.AddRange(BitConverter.GetBytes((int)cmdCommand));
-
-            if (strName != null)
-                result.AddRange(BitConverter.GetBytes(strName.Length));
-            else
-                result.AddRange(BitConverter.GetBytes(0));
-
-            if (strMessage != null)
-                result.AddRange(BitConverter.GetBytes(strMessage.Length));
-            else
-                result.AddRange(BitConverter.GetBytes(0));
-
-            if (strName != null)
-                result.AddRange(Encoding.UTF8.GetBytes(strName));
-
-            if (strMessage != null)
-                result.AddRange(Encoding.UTF8.GetBytes(strMessage));
-
-            return result.ToArray();
-        }
-
-        public string strName;      
-        public string strMessage;   
-        public Command cmdCommand;  
-    }
+    }  
 }

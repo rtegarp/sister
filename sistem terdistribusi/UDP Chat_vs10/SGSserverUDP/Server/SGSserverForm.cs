@@ -9,19 +9,12 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using SerializableData;
 
 namespace Server
 {
-    //The commands for interaction between the server and the client
-    enum Command
-    {
-        Login,      //Log into the server
-        Logout,     //Logout of the server
-        Message,    //Send a text message to all the chat clients
-        List,       //Get a list of users in the chat room from the server
-        Null        //No command
-    }
-
     public partial class SGSserverForm : Form
     {
         //The ClientInfo structure holds the required information about every
@@ -91,7 +84,12 @@ namespace Server
                 
                 //Transform the array of bytes received from the user into an
                 //intelligent form of object Data
-                Data msgReceived = new Data(byteData);
+
+                MessageBox.Show("terkirim");
+
+                MemoryStream ms = new MemoryStream(byteData);
+                BinaryFormatter formatter = new BinaryFormatter();
+                Data msgReceived = (Data)formatter.Deserialize(ms);
 
                 //We will send this object in response the users request
                 Data msgToSend = new Data();
@@ -103,9 +101,11 @@ namespace Server
                 msgToSend.cmdCommand = msgReceived.cmdCommand;
                 msgToSend.strName = msgReceived.strName;
 
+                txtLog.Text = "~" + msgReceived.strName;
+
                 switch (msgReceived.cmdCommand)
                 {
-                    case Command.Login:
+                    case SerializableData.Data.Command.Login:
                         
                         //When a user logs in to the server then we add her to our
                         //list of clients
@@ -120,7 +120,7 @@ namespace Server
                         msgToSend.strMessage = "<<<" + msgReceived.strName + " telah bergabung di room>>>";   
                         break;
 
-                    case Command.Logout:                    
+                    case SerializableData.Data.Command.Logout:                    
                         
                         //When a user wants to log out of the server then we search for her 
                         //in the list of clients and close the corresponding connection
@@ -139,7 +139,7 @@ namespace Server
                         msgToSend.strMessage = "<<<" + msgReceived.strName + " telah meninggalkan room>>>";
                         break;
 
-                    case Command.Message:
+                    case SerializableData.Data.Command.Message:
 
                         //Set the text of the message that we will broadcast to all users
                         //msgToSend.strMessage = msgReceived.strName + ": " + msgReceived.strMessage;
@@ -151,10 +151,10 @@ namespace Server
                             msgToSend.strMessage = msgReceived.strMessage + " - " + perkiraanCuaca;
                         break;
 
-                    case Command.List:
+                    case SerializableData.Data.Command.List:
 
                         //Send the names of all users in the chat room to the new user
-                        msgToSend.cmdCommand = Command.List;
+                        msgToSend.cmdCommand = SerializableData.Data.Command.List;
                         msgToSend.strName = null;
                         msgToSend.strMessage = null;
 
@@ -165,7 +165,11 @@ namespace Server
                             msgToSend.strMessage += client.strName + "*";   
                         }                        
 
-                        message = msgToSend.ToByte();
+                        MemoryStream fs = new MemoryStream();
+                        formatter = new BinaryFormatter();
+                        formatter.Serialize(fs, msgToSend);
+
+                        message = fs.ToArray();
 
                         //Send the name of the users in the chat room
                         serverSocket.BeginSendTo (message, 0, message.Length, SocketFlags.None, epSender, 
@@ -173,26 +177,25 @@ namespace Server
                         break;
                 }
 
-                if (msgToSend.cmdCommand != Command.List)   //List messages are not broadcasted
+                if (msgToSend.cmdCommand != SerializableData.Data.Command.List)   //List messages are not broadcasted
                 {
-                    message = msgToSend.ToByte();
-
-                    foreach (ClientInfo clientInfo in clientList)
+                    MemoryStream fs = new MemoryStream();
+                    formatter = new BinaryFormatter();
+                    formatter.Serialize(fs, msgToSend);
+                    message = fs.ToArray();
+                                        
+                    if (msgToSend.cmdCommand != SerializableData.Data.Command.Login)
                     {
-                        if (clientInfo.endpoint != epSender ||
-                            msgToSend.cmdCommand != Command.Login)
-                        {
-                            //Send the message to all users
-                            serverSocket.BeginSendTo (message, 0, message.Length, SocketFlags.None, clientInfo.endpoint, 
-                                new AsyncCallback(OnSend), clientInfo.endpoint);                           
-                        }
+                        //Send the message to all users
+                        serverSocket.BeginSendTo (message, 0, message.Length, SocketFlags.None, epSender, 
+                            new AsyncCallback(OnSend), epSender);                           
                     }
 
                     txtLog.Text += msgToSend.strMessage + "\r\n";
                 }
 
                 //If the user is logging out then we need not listen from her
-                if (msgReceived.cmdCommand != Command.Logout)
+                if (msgReceived.cmdCommand != SerializableData.Data.Command.Logout)
                 {
                     //Start listening to the message send by the user
                     serverSocket.BeginReceiveFrom (byteData, 0, byteData.Length, SocketFlags.None, ref epSender, 
@@ -227,7 +230,7 @@ namespace Server
                 string[] temp = line.Split('-');
                 cuaca.Add(temp[0].Remove(temp[0].Length - 1, 1), temp[1].Remove(0, 1));
             }
-            cuaca.Add("Semua Hari", allText);
+            cuaca.Add("Semua Hari", allText);            
         }
     }      
 }

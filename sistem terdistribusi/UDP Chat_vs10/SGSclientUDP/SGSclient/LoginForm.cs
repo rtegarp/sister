@@ -7,6 +7,10 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using SerializableData;
 
 namespace SGSclient
 {
@@ -38,11 +42,16 @@ namespace SGSclient
                 epServer = (EndPoint)ipEndPoint;
                 
                 Data msgToSend = new Data ();
-                msgToSend.cmdCommand = Command.Login;
+                msgToSend.cmdCommand = SerializableData.Data.Command.Login;
                 msgToSend.strMessage = null;
                 msgToSend.strName = strName;
 
-                byte[] byteData = msgToSend.ToByte();
+                MemoryStream fs = new MemoryStream();
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fs, msgToSend);
+
+                byte[] byteData = fs.ToArray();
+                //MessageBox.Show(byteData[2].ToString());
                 
                 //Login to the server
                 clientSocket.BeginSendTo(byteData, 0, byteData.Length, 
