@@ -223,8 +223,8 @@ namespace Server
         private void ReadFile()
         {
             cuaca = new Dictionary<string,string>();
-            string allText = System.IO.File.ReadAllText(@"C:\Users\admin\Documents\GitHub\sister\sistem terdistribusi\UDP Chat_vs10\SGSserverUDP\Server\cuaca.txt");
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\admin\Documents\GitHub\sister\sistem terdistribusi\UDP Chat_vs10\SGSserverUDP\Server\cuaca.txt");
+            string allText = System.IO.File.ReadAllText("cuaca.txt");
+            string[] lines = System.IO.File.ReadAllLines("cuaca.txt");
             foreach (var line in lines)
             {
                 string[] temp = line.Split('-');
