@@ -126,7 +126,7 @@ namespace SGSclient
         {
 	    CheckForIllegalCrossThreadCalls = false;
 
-            this.Text = "SGSclient: " + strName;
+            this.Text = "Perkiraan Cuaca: " + strName;
             
             Data msgToSend = new Data ();
             msgToSend.cmdCommand = SerializableData.Data.Command.List;
