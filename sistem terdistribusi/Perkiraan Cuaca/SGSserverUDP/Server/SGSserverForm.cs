@@ -84,9 +84,7 @@ namespace Server
                 
                 //Transform the array of bytes received from the user into an
                 //intelligent form of object Data
-
-                MessageBox.Show("terkirim");
-
+                
                 MemoryStream ms = new MemoryStream(byteData);
                 BinaryFormatter formatter = new BinaryFormatter();
                 Data msgReceived = (Data)formatter.Deserialize(ms);
@@ -101,8 +99,6 @@ namespace Server
                 msgToSend.cmdCommand = msgReceived.cmdCommand;
                 msgToSend.strName = msgReceived.strName;
 
-                txtLog.Text = "~" + msgReceived.strName;
-
                 switch (msgReceived.cmdCommand)
                 {
                     case SerializableData.Data.Command.Login:
@@ -112,19 +108,21 @@ namespace Server
 
                         ClientInfo clientInfo = new ClientInfo();
                         clientInfo.endpoint = epSender;      
-                        clientInfo.strName = msgReceived.strName;                        
-
+                        clientInfo.strName = msgReceived.strName;                 
                         clientList.Add(clientInfo);
-                        
-                        //Set the text of the message that we will broadcast to all users
-                        msgToSend.strMessage = "<<<" + msgReceived.strName + " telah bergabung di room>>>";   
+                        listPlayer.Items.Clear();
+                        foreach (ClientInfo client in clientList)
+                        {
+                            //To keep things simple we use asterisk as the marker to separate the user names
+                            listPlayer.Items.Add(client.strName);
+                        }                       
                         break;
 
                     case SerializableData.Data.Command.Logout:                    
                         
                         //When a user wants to log out of the server then we search for her 
                         //in the list of clients and close the corresponding connection
-
+                        MessageBox.Show("ada yg keluar nih");
                         int nIndex = 0;
                         foreach (ClientInfo client in clientList)
                         {
@@ -134,9 +132,13 @@ namespace Server
                                 break;
                             }
                             ++nIndex;
-                        }                                               
+                        }
+                        listPlayer.Items.Clear();
+                        foreach (ClientInfo client in clientList)
+                        {
+                            listPlayer.Items.Add(client.strName);
+                        }                    
                         
-                        msgToSend.strMessage = "<<<" + msgReceived.strName + " telah meninggalkan room>>>";
                         break;
 
                     case SerializableData.Data.Command.Message:
@@ -223,8 +225,8 @@ namespace Server
         private void ReadFile()
         {
             cuaca = new Dictionary<string,string>();
-            string allText = System.IO.File.ReadAllText("cuaca.txt");
-            string[] lines = System.IO.File.ReadAllLines("cuaca.txt");
+            string allText = System.IO.File.ReadAllText(@"C:\Users\tegar\Documents\GitHub\sister\sistem terdistribusi\Perkiraan Cuaca\SGSserverUDP\Server\cuaca.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\tegar\Documents\GitHub\sister\sistem terdistribusi\Perkiraan Cuaca\SGSserverUDP\Server\cuaca.txt");
             foreach (var line in lines)
             {
                 string[] temp = line.Split('-');
