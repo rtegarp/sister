@@ -90,7 +90,7 @@ namespace SGSclient
                 switch (msgReceived.cmdCommand)
                 {
                     case Command.Login:
-                        lstChatters.Items.Add(msgReceived.strName);
+                        //lstChatters.Items.Add(msgReceived.strName);
                         break;
 
                     case Command.Logout:
@@ -103,7 +103,7 @@ namespace SGSclient
                     case Command.List:
                         lstChatters.Items.AddRange(msgReceived.strMessage.Split('*'));
                         lstChatters.Items.RemoveAt(lstChatters.Items.Count - 1);
-                        txtChatBox.Text += "<<<" + strName + " Telah bergabung ke room>>>\r\n";
+                        txtChatBox.Text += "<<<" + strName + " Telah masuk ke dalam aplikasi cuaca>>>\r\n";
                         break;
                 }
 
@@ -158,7 +158,7 @@ namespace SGSclient
 
         private void SGSClient_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (MessageBox.Show("Apakah anda ingin keluar dari chat room?", "SGSclient: " + strName,
+            if (MessageBox.Show("Apakah anda ingin keluar dari aplikasi?", "SGSclient: " + strName,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
             {
                 e.Cancel = true;
