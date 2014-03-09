@@ -59,7 +59,7 @@ namespace SGSclient
             }
             catch (Exception)
             {
-                MessageBox.Show("Tidak dapat menjangkau server", "SGSclientUDP: " + strName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Tidak dapat menjangkau server", "Perkiraan Cuaca - client: " + strName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }  
         }
         
@@ -73,7 +73,7 @@ namespace SGSclient
             { }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "SGSclient: " + strName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Perkiraan Cuaca - client: " + strName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -118,7 +118,7 @@ namespace SGSclient
             { }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "SGSclient: " + strName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Perkiraan Cuaca - client: " + strName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -188,7 +188,7 @@ namespace SGSclient
             { }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "SGSclient: " + strName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Perkiraan Cuaca - client: " + strName, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
