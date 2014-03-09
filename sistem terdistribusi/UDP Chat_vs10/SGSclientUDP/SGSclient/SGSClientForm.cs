@@ -31,6 +31,12 @@ namespace SGSclient
         public SGSClient()
         {
             InitializeComponent();
+            pilihComboBox.Items.Add("Senin");
+            pilihComboBox.Items.Add("Selasa");
+            pilihComboBox.Items.Add("Rabu");
+            pilihComboBox.Items.Add("Kamis");
+            pilihComboBox.Items.Add("Jumat");
+            pilihComboBox.Items.Add("Semua Hari");
         }
 
         private void btnSend_Click(object sender, EventArgs e)
@@ -41,7 +47,7 @@ namespace SGSclient
                 List<Data> coba = new List<Data>();
               
                 msgToSend.strName = strName;
-                msgToSend.strMessage = txtMessage.Text;
+                msgToSend.strMessage = pilihComboBox.Text;
                 msgToSend.cmdCommand = Command.Message;
                 coba.Add(msgToSend);
                 coba.Add(msgToSend);
@@ -51,7 +57,7 @@ namespace SGSclient
 
                 clientSocket.BeginSendTo (byteData, 0, byteData.Length, SocketFlags.None, epServer, new AsyncCallback(OnSend), null);
 
-                txtMessage.Text = null;
+                //txtMessage.Text = null;
             }
             catch (Exception)
             {
