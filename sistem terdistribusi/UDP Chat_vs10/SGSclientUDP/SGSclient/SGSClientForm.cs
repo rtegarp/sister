@@ -31,11 +31,11 @@ namespace SGSclient
         public SGSClient()
         {
             InitializeComponent();
-            pilihComboBox.Items.Add("Senin");
-            pilihComboBox.Items.Add("Selasa");
-            pilihComboBox.Items.Add("Rabu");
-            pilihComboBox.Items.Add("Kamis");
-            pilihComboBox.Items.Add("Jumat");
+            pilihComboBox.Items.Add("Senin, 11 Maret 2014");
+            pilihComboBox.Items.Add("Selasa, 12 Maret 2014");
+            pilihComboBox.Items.Add("Rabu, 13 Maret 2014");
+            pilihComboBox.Items.Add("Kamis, 15 Maret 2014");
+            pilihComboBox.Items.Add("Jumat, 16 Maret 2014");
             pilihComboBox.Items.Add("Semua Hari");
         }
 
