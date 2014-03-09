@@ -34,13 +34,14 @@ namespace SGSclient
             pilihComboBox.Items.Add("Senin, 11 Maret 2014");
             pilihComboBox.Items.Add("Selasa, 12 Maret 2014");
             pilihComboBox.Items.Add("Rabu, 13 Maret 2014");
-            pilihComboBox.Items.Add("Kamis, 15 Maret 2014");
-            pilihComboBox.Items.Add("Jumat, 16 Maret 2014");
+            pilihComboBox.Items.Add("Kamis, 14 Maret 2014");
+            pilihComboBox.Items.Add("Jumat, 15 Maret 2014");
             pilihComboBox.Items.Add("Semua Hari");
         }
 
         private void btnSend_Click(object sender, EventArgs e)
         {
+            
             try
             {		
                 Data msgToSend = new Data();
@@ -94,22 +95,21 @@ namespace SGSclient
                         break;
 
                     case Command.Logout:
-                        lstChatters.Items.Remove(msgReceived.strName);
                         break;
 
                     case Command.Message:
                         break;
 
                     case Command.List:
-                        lstChatters.Items.AddRange(msgReceived.strMessage.Split('*'));
-                        lstChatters.Items.RemoveAt(lstChatters.Items.Count - 1);
                         txtChatBox.Text += "<<<" + strName + " Telah masuk ke dalam aplikasi cuaca>>>\r\n";
                         break;
                 }
 
                 if (msgReceived.strMessage != null && msgReceived.cmdCommand != Command.List)
+                {
+                    txtChatBox.Text = "";
                     txtChatBox.Text += msgReceived.strMessage + "\r\n";
-
+                }
                 byteData = new byte[1024];                
 
                 clientSocket.BeginReceiveFrom(byteData, 0, byteData.Length, SocketFlags.None, ref epServer,
@@ -150,10 +150,10 @@ namespace SGSclient
 
         private void txtMessage_TextChanged(object sender, EventArgs e)
         {
-            if (pilihComboBox.Text.Length == 0)
+            /*if (pilihComboBox.Text == "")
                 btnSend.Enabled = false;
             else
-                btnSend.Enabled = true;
+                btnSend.Enabled = true;*/
         }
 
         private void SGSClient_FormClosing(object sender, FormClosingEventArgs e)

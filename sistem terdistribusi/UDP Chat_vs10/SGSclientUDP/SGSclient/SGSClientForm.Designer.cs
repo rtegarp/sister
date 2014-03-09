@@ -30,13 +30,11 @@ namespace SGSclient
         {
             this.btnSend = new System.Windows.Forms.Button();
             this.txtChatBox = new System.Windows.Forms.TextBox();
-            this.lstChatters = new System.Windows.Forms.ListBox();
             this.pilihComboBox = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // btnSend
             // 
-            this.btnSend.Enabled = false;
             this.btnSend.Location = new System.Drawing.Point(301, 14);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(75, 21);
@@ -53,16 +51,8 @@ namespace SGSclient
             this.txtChatBox.Name = "txtChatBox";
             this.txtChatBox.ReadOnly = true;
             this.txtChatBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtChatBox.Size = new System.Drawing.Size(364, 248);
+            this.txtChatBox.Size = new System.Drawing.Size(364, 104);
             this.txtChatBox.TabIndex = 2;
-            // 
-            // lstChatters
-            // 
-            this.lstChatters.FormattingEnabled = true;
-            this.lstChatters.Location = new System.Drawing.Point(382, 14);
-            this.lstChatters.Name = "lstChatters";
-            this.lstChatters.Size = new System.Drawing.Size(103, 277);
-            this.lstChatters.TabIndex = 4;
             // 
             // pilihComboBox
             // 
@@ -76,9 +66,8 @@ namespace SGSclient
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(497, 302);
+            this.ClientSize = new System.Drawing.Size(389, 153);
             this.Controls.Add(this.pilihComboBox);
-            this.Controls.Add(this.lstChatters);
             this.Controls.Add(this.txtChatBox);
             this.Controls.Add(this.btnSend);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -96,7 +85,6 @@ namespace SGSclient
 
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.TextBox txtChatBox;
-        private System.Windows.Forms.ListBox lstChatters;
         private System.Windows.Forms.ComboBox pilihComboBox;
     }
 }
