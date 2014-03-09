@@ -50,7 +50,7 @@ namespace Server
 
             //We are using UDP sockets
             serverSocket = new Socket(AddressFamily.InterNetwork, 
-                SocketType.Dgram, ProtocolType.Tcp);
+                SocketType.Dgram, ProtocolType.Udp);
 
             //Assign the any IP of the machine and listen on port number 1000
             IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 1000);
