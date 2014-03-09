@@ -150,7 +150,7 @@ namespace SGSclient
 
         private void txtMessage_TextChanged(object sender, EventArgs e)
         {
-            if (txtMessage.Text.Length == 0)
+            if (pilihComboBox.Text.Length == 0)
                 btnSend.Enabled = false;
             else
                 btnSend.Enabled = true;
