@@ -54,7 +54,6 @@ namespace SGSclient
                 byte[] byteData = fs.ToArray();
 
                 clientSocket.BeginSendTo (byteData, 0, byteData.Length, SocketFlags.None, epServer, new AsyncCallback(OnSend), null);
-
                 //txtMessage.Text = null;
             }
             catch (Exception)
@@ -98,13 +97,9 @@ namespace SGSclient
 
                     case SerializableData.Data.Command.Message:
                         break;
-
-                    case SerializableData.Data.Command.List:
-                        txtChatBox.Text += "<<<" + strName + " Telah masuk ke dalam aplikasi cuaca>>>\r\n";
-                        break;
                 }
 
-                if (msgReceived.strMessage != null && msgReceived.cmdCommand != SerializableData.Data.Command.List)
+                if (msgReceived.strMessage != null)
                 {
                     txtChatBox.Text = "";
                     txtChatBox.Text += msgReceived.strMessage + "\r\n";
@@ -124,31 +119,13 @@ namespace SGSclient
 
         private void Form1_Load(object sender, EventArgs e)
         {
-	    CheckForIllegalCrossThreadCalls = false;
+	        CheckForIllegalCrossThreadCalls = false;
 
             this.Text = "Perkiraan Cuaca: " + strName;
-            
-            Data msgToSend = new Data ();
-            msgToSend.cmdCommand = SerializableData.Data.Command.List;
-            msgToSend.strName = strName;
-            msgToSend.strMessage = null;
-
-            MemoryStream fs = new MemoryStream();
-            BinaryFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(fs, msgToSend);
-
-            byteData = fs.ToArray();
-
-            clientSocket.BeginSendTo(byteData, 0, byteData.Length, SocketFlags.None, epServer, 
-                new AsyncCallback(OnSend), null);
 
             byteData = new byte[1024];
-            clientSocket.BeginReceiveFrom (byteData,
-                                       0, byteData.Length,
-                                       SocketFlags.None,
-                                       ref epServer,
-                                       new AsyncCallback(OnReceive),
-                                       null);
+            clientSocket.BeginReceiveFrom(byteData, 0, byteData.Length, SocketFlags.None, ref epServer,
+                                           new AsyncCallback(OnReceive), null);
         }
 
         private void txtMessage_TextChanged(object sender, EventArgs e)

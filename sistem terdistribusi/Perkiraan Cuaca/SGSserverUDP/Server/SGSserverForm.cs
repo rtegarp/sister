@@ -122,13 +122,14 @@ namespace Server
                         
                         //When a user wants to log out of the server then we search for her 
                         //in the list of clients and close the corresponding connection
-                        MessageBox.Show("ada yg keluar nih");
+                        
                         int nIndex = 0;
                         foreach (ClientInfo client in clientList)
                         {
                             if (client.endpoint == epSender)
                             {
                                 clientList.RemoveAt(nIndex);
+                                MessageBox.Show("ada yg keluar nih");
                                 break;
                             }
                             ++nIndex;
@@ -151,50 +152,22 @@ namespace Server
                             msgToSend.strMessage = perkiraanCuaca;
                         else
                             msgToSend.strMessage = msgReceived.strMessage + " - " + perkiraanCuaca;
-                        break;
-
-                    case SerializableData.Data.Command.List:
-
-                        //Send the names of all users in the chat room to the new user
-                        msgToSend.cmdCommand = SerializableData.Data.Command.List;
-                        msgToSend.strName = null;
-                        msgToSend.strMessage = null;
-
-                        //Collect the names of the user in the chat room
-                        foreach (ClientInfo client in clientList)
-                        {
-                            //To keep things simple we use asterisk as the marker to separate the user names
-                            msgToSend.strMessage += client.strName + "*";   
-                        }                        
-
-                        MemoryStream fs = new MemoryStream();
-                        formatter = new BinaryFormatter();
-                        formatter.Serialize(fs, msgToSend);
-
-                        message = fs.ToArray();
-
-                        //Send the name of the users in the chat room
-                        serverSocket.BeginSendTo (message, 0, message.Length, SocketFlags.None, epSender, 
-                                new AsyncCallback(OnSend), epSender);                        
-                        break;
+                        break;                    
                 }
-
-                if (msgToSend.cmdCommand != SerializableData.Data.Command.List)   //List messages are not broadcasted
-                {
-                    MemoryStream fs = new MemoryStream();
-                    formatter = new BinaryFormatter();
-                    formatter.Serialize(fs, msgToSend);
-                    message = fs.ToArray();
+                
+                MemoryStream fs = new MemoryStream();
+                formatter = new BinaryFormatter();
+                formatter.Serialize(fs, msgToSend);
+                message = fs.ToArray();
                                         
-                    if (msgToSend.cmdCommand != SerializableData.Data.Command.Login)
-                    {
-                        //Send the message to all users
-                        serverSocket.BeginSendTo (message, 0, message.Length, SocketFlags.None, epSender, 
-                            new AsyncCallback(OnSend), epSender);                           
-                    }
-
-                    txtLog.Text += msgToSend.strMessage + "\r\n";
+                if (msgToSend.cmdCommand != SerializableData.Data.Command.Login)
+                {
+                    //Send the message to all users
+                    serverSocket.BeginSendTo (message, 0, message.Length, SocketFlags.None, epSender, 
+                        new AsyncCallback(OnSend), epSender);                           
                 }
+
+                txtLog.Text += msgToSend.strMessage + "\r\n";
 
                 //If the user is logging out then we need not listen from her
                 if (msgReceived.cmdCommand != SerializableData.Data.Command.Logout)
@@ -225,8 +198,8 @@ namespace Server
         private void ReadFile()
         {
             cuaca = new Dictionary<string,string>();
-            string allText = System.IO.File.ReadAllText(@"C:\Users\tegar\Documents\GitHub\sister\sistem terdistribusi\Perkiraan Cuaca\SGSserverUDP\Server\cuaca.txt");
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\tegar\Documents\GitHub\sister\sistem terdistribusi\Perkiraan Cuaca\SGSserverUDP\Server\cuaca.txt");
+            string allText = System.IO.File.ReadAllText(@"C:\Users\admin\Documents\GitHub\sister\sistem terdistribusi\Perkiraan Cuaca\SGSserverUDP\Server\cuaca.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\admin\Documents\GitHub\sister\sistem terdistribusi\Perkiraan Cuaca\SGSserverUDP\Server\cuaca.txt");
             foreach (var line in lines)
             {
                 string[] temp = line.Split('-');
