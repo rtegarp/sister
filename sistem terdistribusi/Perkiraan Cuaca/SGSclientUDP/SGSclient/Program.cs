@@ -27,6 +27,7 @@ namespace SGSclient
 
                 sgsClientForm.ShowDialog();
             }
+            else MessageBox.Show("login gagal");
 
         }
     }

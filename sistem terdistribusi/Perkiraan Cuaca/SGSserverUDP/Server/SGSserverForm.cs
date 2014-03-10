@@ -50,7 +50,7 @@ namespace Server
 
             //We are using UDP sockets
             serverSocket = new Socket(AddressFamily.InterNetwork, 
-                SocketType.Dgram, ProtocolType.Udp);
+                SocketType.Dgram, ProtocolType.Tcp);
 
             //Assign the any IP of the machine and listen on port number 1000
             IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 1000);
@@ -115,7 +115,15 @@ namespace Server
                         {
                             //To keep things simple we use asterisk as the marker to separate the user names
                             listPlayer.Items.Add(client.strName);
-                        }                       
+                        }
+                        msgToSend.strMessage = "<<<" + msgReceived.strName + " telah terhubung dengan server>>>";
+                        MemoryStream fslogin = new MemoryStream();
+                        formatter = new BinaryFormatter();
+                        formatter.Serialize(fslogin, msgToSend);
+                        message = fslogin.ToArray();
+
+                        serverSocket.BeginSendTo (message, 0, message.Length, SocketFlags.None, epSender, 
+                                new AsyncCallback(OnSend), epSender);
                         break;
 
                     case SerializableData.Data.Command.Logout:                    
@@ -198,8 +206,8 @@ namespace Server
         private void ReadFile()
         {
             cuaca = new Dictionary<string,string>();
-            string allText = System.IO.File.ReadAllText(@"C:\Users\admin\Documents\GitHub\sister\sistem terdistribusi\Perkiraan Cuaca\SGSserverUDP\Server\cuaca.txt");
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\admin\Documents\GitHub\sister\sistem terdistribusi\Perkiraan Cuaca\SGSserverUDP\Server\cuaca.txt");
+            string allText = System.IO.File.ReadAllText(@"C:\Users\Tegar\Documents\GitHub\sister\sistem terdistribusi\Perkiraan Cuaca\SGSserverUDP\Server\cuaca.txt");
+            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\Tegar\Documents\GitHub\sister\sistem terdistribusi\Perkiraan Cuaca\SGSserverUDP\Server\cuaca.txt");
             foreach (var line in lines)
             {
                 string[] temp = line.Split('-');
