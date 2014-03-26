@@ -85,6 +85,23 @@ def read_xml(n):
             data_list.append("SuhuMin : " + suhumin)
             data_list.append("SuhuMax : " + suhumax)
             data_list.append("")
+
+    elif n==5:
+        url = "http://data.bmkg.go.id/daerah_gelombang_tinggi.xml"
+        doc = ET.parse(urllib.urlopen(url))
+        root = doc.getroot()
+        for Tanggal in root.findall('Tanggal'):
+            mulai = Tanggal.find('Mulai').text
+            sampai = Tanggal.find('Sampai').text
+            data_list.append("Mulai : " + mulai)
+            data_list.append("Sampai : " + sampai)
+            data_list.append("")
+        for Row in root.findall('Isi/Row'):
+            tinggi = Row.find('Tinggi').text
+            daerah = Row.find('Daerah').text
+            data_list.append("Tinggi : " + tinggi)
+            data_list.append("Daerah : " + daerah)
+            data_list.append("")
     return data_list
 
 def empty_list():
