@@ -30,13 +30,10 @@ namespace SGSclient
             strName = txtName.Text;
             try
             {
-                //Using UDP sockets
                 clientSocket = new Socket(AddressFamily.InterNetwork, 
                     SocketType.Dgram, ProtocolType.Udp);
 
-                //IP address of the server machine
                 IPAddress ipAddress = IPAddress.Parse(txtServerIP.Text);
-                //Server is listening on port 1000
                 IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, 1000);
 
                 epServer = (EndPoint)ipEndPoint;
@@ -53,7 +50,6 @@ namespace SGSclient
                 byte[] byteData = fs.ToArray();
                 //MessageBox.Show(byteData[2].ToString());
                 
-                //Login to the server
                 clientSocket.BeginSendTo(byteData, 0, byteData.Length, 
                     SocketFlags.None, epServer, new AsyncCallback(OnSend), null);
             }

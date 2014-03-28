@@ -35,17 +35,17 @@ namespace SGSclient
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            
+          
             try
             {		
                 Data msgToSend = new Data();
-                List<Data> coba = new List<Data>();
+                //List<Data> coba = new List<Data>();
               
                 msgToSend.strName = strName;
                 msgToSend.strMessage = pilihComboBox.Text;
                 msgToSend.cmdCommand = SerializableData.Data.Command.Message;
-                coba.Add(msgToSend);
-                coba.Add(msgToSend);
+                //coba.Add(msgToSend);
+                //coba.Add(msgToSend);
 
                 MemoryStream fs = new MemoryStream();
                 BinaryFormatter formatter = new BinaryFormatter();
@@ -78,7 +78,7 @@ namespace SGSclient
 
         private void OnReceive(IAsyncResult ar)
         {
-            if ((DateTime.Now - time1).TotalSeconds > 2) Close();
+            //if ((DateTime.Now - time1).TotalSeconds > 2) Close();
             try
             {                
                 clientSocket.EndReceive(ar);

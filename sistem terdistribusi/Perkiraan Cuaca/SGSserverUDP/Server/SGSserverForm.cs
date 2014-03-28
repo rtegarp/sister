@@ -50,7 +50,7 @@ namespace Server
 
             //We are using UDP sockets
             serverSocket = new Socket(AddressFamily.InterNetwork, 
-                SocketType.Dgram, ProtocolType.Tcp);
+                SocketType.Dgram, ProtocolType.Udp);
 
             //Assign the any IP of the machine and listen on port number 1000
             IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 1000);
@@ -110,12 +110,12 @@ namespace Server
                         clientInfo.endpoint = epSender;      
                         clientInfo.strName = msgReceived.strName;                 
                         clientList.Add(clientInfo);
-                        listPlayer.Items.Clear();
-                        foreach (ClientInfo client in clientList)
+                        //listPlayer.Items.Clear();
+                        /*foreach (ClientInfo client in clientList)
                         {
                             //To keep things simple we use asterisk as the marker to separate the user names
-                            listPlayer.Items.Add(client.strName);
-                        }
+                            //listPlayer.Items.Add(client.strName);
+                        }*/
                         msgToSend.strMessage = "<<<" + msgReceived.strName + " telah terhubung dengan server>>>";
                         MemoryStream fslogin = new MemoryStream();
                         formatter = new BinaryFormatter();
@@ -128,9 +128,6 @@ namespace Server
 
                     case SerializableData.Data.Command.Logout:                    
                         
-                        //When a user wants to log out of the server then we search for her 
-                        //in the list of clients and close the corresponding connection
-                        
                         int nIndex = 0;
                         foreach (ClientInfo client in clientList)
                         {
@@ -142,12 +139,12 @@ namespace Server
                             }
                             ++nIndex;
                         }
-                        listPlayer.Items.Clear();
+                        /*listPlayer.Items.Clear();
                         foreach (ClientInfo client in clientList)
                         {
                             listPlayer.Items.Add(client.strName);
                         }                    
-                        
+                        */
                         break;
 
                     case SerializableData.Data.Command.Message:
