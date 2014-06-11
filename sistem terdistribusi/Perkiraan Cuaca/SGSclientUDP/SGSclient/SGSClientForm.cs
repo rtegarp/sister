@@ -19,7 +19,6 @@ namespace SGSclient
         public Socket clientSocket; 
         public string strName;      
         public EndPoint epServer;
-        public DateTime time1, time2;
         byte []byteData = new byte[1024];
 
         public SGSClient()
@@ -78,9 +77,12 @@ namespace SGSclient
 
         private void OnReceive(IAsyncResult ar)
         {
+<<<<<<< HEAD
             //if ((DateTime.Now - time1).TotalSeconds > 2) Close();
+=======
+>>>>>>> 891aa2eaa29ccc49b58fd2d8ccfa975fd0ba6230
             try
-            {                
+            {
                 clientSocket.EndReceive(ar);
 
                 MemoryStream ms = new MemoryStream(byteData);
@@ -105,7 +107,7 @@ namespace SGSclient
                     txtChatBox.Text = "";
                     txtChatBox.Text += msgReceived.strMessage + "\r\n";
                 }
-                byteData = new byte[1024];                
+                byteData = new byte[1024];
 
                 clientSocket.BeginReceiveFrom(byteData, 0, byteData.Length, SocketFlags.None, ref epServer,
                                            new AsyncCallback(OnReceive), null);
@@ -120,7 +122,6 @@ namespace SGSclient
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            time1 = DateTime.Now;
 	        CheckForIllegalCrossThreadCalls = false;
             this.Text = "Perkiraan Cuaca: " + strName;
 

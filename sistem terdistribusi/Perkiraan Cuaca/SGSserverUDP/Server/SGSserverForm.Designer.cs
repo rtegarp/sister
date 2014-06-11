@@ -39,14 +39,18 @@ namespace Server
             this.txtLog.Name = "txtLog";
             this.txtLog.ReadOnly = true;
             this.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtLog.Size = new System.Drawing.Size(231, 292);
+            this.txtLog.Size = new System.Drawing.Size(384, 292);
             this.txtLog.TabIndex = 0;
             // 
             // SGSserverForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+<<<<<<< HEAD
             this.ClientSize = new System.Drawing.Size(257, 315);
+=======
+            this.ClientSize = new System.Drawing.Size(409, 314);
+>>>>>>> 891aa2eaa29ccc49b58fd2d8ccfa975fd0ba6230
             this.Controls.Add(this.txtLog);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
