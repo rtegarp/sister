@@ -1,0 +1,8 @@
+module HelloApp
+{
+  interface Hello
+  {
+	string doEcho(in string str);
+	oneway void shutdown();
+  };
+};
